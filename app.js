@@ -4,8 +4,14 @@ const ctx = canvas.getContext("2d");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
 const reset = document.getElementById("jsReset");
+const save = document.getElementById("jsSave");
 
-ctx.strokeStyle = "#2c2c2c";
+const INITIAL_COLOR = "#2c2c2c";
+
+setCanvas();
+
+ctx.strokeStyle = INITIAL_COLOR;
+ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 1;
 
 canvas.width = canvas.offsetWidth;
@@ -13,6 +19,11 @@ canvas.height = canvas.offsetHeight;
 
 let painting = false;
 let filling = false;
+
+function setCanvas() {
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.height, canvas.width);
+}
 
 function startPainting() {
   painting = true;
@@ -34,18 +45,12 @@ function onMouseMove(event) {
   }
 }
 
-if (canvas) {
-  canvas.addEventListener("mousemove", onMouseMove);
-  canvas.addEventListener("mousedown", startPainting);
-  canvas.addEventListener("mouseup", stopPainting);
-  canvas.addEventListener("mouseleave", stopPainting);
-}
-
 //colors control
 
 function handleColor(event) {
   const color = event.target.style.backgroundColor;
   ctx.strokeStyle = color;
+  ctx.fillStyle = color;
 }
 
 Array.from(colors).forEach((color) =>
@@ -65,16 +70,52 @@ if (range) {
 
 //mode Change Controller
 
+function handleCanvasClick(e) {
+  if (filling) {
+    ctx.fillRect(0, 0, canvas.height, canvas.width);
+  }
+}
+
 function handleMode(e) {
   if (filling === true) {
     filling = false;
-    mode.innerText = "FILL";
+    mode.innerText = "DRAW";
   } else {
     filling = true;
-    mode.innerText = "DRAW";
+    mode.innerText = "FILL";
   }
+}
+
+function handleCM(event) {
+  event.preventDefault();
+}
+
+function handleSave(event) {
+  const image = canvas.toDataURL("image/png");
+  const link = document.createElement("a");
+  link.href = image;
+  link.download = "image.png";
+  link.click();
+  console.log(link);
 }
 
 if (mode) {
   mode.addEventListener("click", handleMode);
+}
+
+if (reset) {
+  reset.addEventListener("click", setCanvas);
+}
+
+if (save) {
+  save.addEventListener("click", handleSave);
+}
+
+if (canvas) {
+  canvas.addEventListener("mousemove", onMouseMove);
+  canvas.addEventListener("mousedown", startPainting);
+  canvas.addEventListener("mouseup", stopPainting);
+  canvas.addEventListener("mouseleave", stopPainting);
+  canvas.addEventListener("click", handleCanvasClick);
+  canvas.addEventListener("contextmenu", handleCM);
 }
