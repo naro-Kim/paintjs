@@ -10,6 +10,13 @@ body {
   padding: 50px;
 }
 
+.head__border {
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 16px;
+  background-color: white;
+}
+
 .guide__Text {
   color: #888888;
   margin-bottom: 8px;
