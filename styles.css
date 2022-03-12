@@ -46,6 +46,11 @@ body {
   margin-top: 24px;
 }
 
+.controls__color:hover {
+  outline: 5px solid white;
+  outline-offset: -4px;
+  transition: ease-in-out 5ms;
+}
 .controls__btns button {
   all: unset;
   width: 64px;
